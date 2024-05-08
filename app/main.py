@@ -18,7 +18,8 @@ def process_csv(file):
     def extract_punch_records(row):
         punch_records = row['Punch Records']
         if pd.isna(punch_records):  # Check for NaN values
-            return pd.Series({'In(ATD)': np.nan, 'Out(ATD)': np.nan})  # Return NaN values if 'Punch Records' is NaN
+            # return pd.Series({'Out(ATD)hr': np.nan, 'In(ATD)hr': np.nan })  # Return NaN values if 'Punch Records' is NaN
+            return pd.Series({'Out(ATD)hr': np.nan, 'In(ATD)hr': np.nan, 'Out(ATD)mint': np.nan, 'In(ATD)mint': np.nan})  # Return NaN values if 'Punch Records' is NaN
         # in_atd = re.findall(r'(\d{2}:\d{2}:in\(ATD\))', punch_records)
         time_differences = calculate_time_differences_in(punch_records)
         in_atd = sum(time_differences)   
@@ -28,12 +29,13 @@ def process_csv(file):
         out_atd = sum(time_gaps)
         out_hr = round(out_atd/60 , 2)
         # return pd.Series({'In(ATD)': ','.join(in_atd), 'Out(ATD)': ','.join(out_atd)})
-        # return pd.Series({'In(ATD)': str(in_hrs) + ' hr', 'Out(ATD)': str(out_hr) + ' hr'})
-        return pd.Series({ 'Out(ATD)': str(out_hr) + ' hr', 'In(ATD)': str(in_hrs) + ' hr'})
+        # return pd.Series({ 'Out(ATD)hr': str(out_hr) + ' hr', 'In(ATD)hr': str(in_hrs) + ' hr'})
+        return pd.Series({ 'Out(ATD)hr': str(out_hr) + ' hr', 'In(ATD)hr': str(in_hrs) + ' hr', 'Out(ATD)mint': str(out_atd) + ' mint', 'In(ATD)mint': str(in_atd) + ' mint' })
 
 
     # Apply the function to each row to create new columns 'In(ATD)' and 'Out(ATD)'
-    df[['In(ATD)', 'Out(ATD)']] = df.apply(extract_punch_records, axis=1)
+    # df[['Out(ATD)hr', 'In(ATD)hr' ]] = df.apply(extract_punch_records, axis=1)
+    df[['Out(ATD)hr', 'In(ATD)hr', 'Out(ATD)mint', 'In(ATD)mint' ]] = df.apply(extract_punch_records, axis=1)
 
     # Export DataFrame to new CSV file
     output_csv = BytesIO()
@@ -105,19 +107,19 @@ def calculate_time_gap_out(punch_records):
 
 
 # Example usage:
-punch_records = '09:52:in(ATD),10:07:out(ATD),10:12:in(ATD),11:09:out(ATD),11:13:in(ATD),12:06:out(ATD),12:13:in(ATD),12:13:out(ATD),13:30:in(ATD),13:32:out(ATD),14:11:in(ATD),14:29:out(ATD),15:18:in(ATD),15:27:out(ATD),16:14:in(ATD),16:19:out(ATD),16:41:in(ATD),16:56:out(ATD),17:59:in(ATD),18:04:out(ATD),19:00:in(ATD),	'
-time_gaps = calculate_time_gap_out(punch_records)
-time_gaps_total = sum(time_gaps)
-print("Time out of office (in minutes):", time_gaps)
-print("Time out of office:", time_gaps_total)
-print("Time out of office:", round(time_gaps_total/60 , 2) )
-print("Time out of office:", time_gaps_total/60 )
+# punch_records = '09:52:in(ATD),10:07:out(ATD),10:12:in(ATD),11:09:out(ATD),11:13:in(ATD),12:06:out(ATD),12:13:in(ATD),12:13:out(ATD),13:30:in(ATD),13:32:out(ATD),14:11:in(ATD),14:29:out(ATD),15:18:in(ATD),15:27:out(ATD),16:14:in(ATD),16:19:out(ATD),16:41:in(ATD),16:56:out(ATD),17:59:in(ATD),18:04:out(ATD),19:00:in(ATD),	'
+# time_gaps = calculate_time_gap_out(punch_records)
+# time_gaps_total = sum(time_gaps)
+# print("Time out of office (in minutes):", time_gaps)
+# print("Time out of office:", time_gaps_total)
+# print("Time out of office:", round(time_gaps_total/60 , 2) )
+# print("Time out of office:", time_gaps_total/60 )
 
 
-# Example usage:
-time_differences = calculate_time_differences_in(punch_records)
-time_sum_mint = sum(time_differences)
-print("Time in office (in minutes):", time_differences)
-print("Time in office (in total minutes):", time_sum_mint)
-print("Time in office (in hours):", round(time_sum_mint/60, 2) )
-print("Time in office (in hours):", time_sum_mint/60 )
+# # Example usage:
+# time_differences = calculate_time_differences_in(punch_records)
+# time_sum_mint = sum(time_differences)
+# print("Time in office (in minutes):", time_differences)
+# print("Time in office (in total minutes):", time_sum_mint)
+# print("Time in office (in hours):", round(time_sum_mint/60, 2) )
+# print("Time in office (in hours):", time_sum_mint/60 )

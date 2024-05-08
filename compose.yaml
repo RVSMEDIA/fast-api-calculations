@@ -3,7 +3,7 @@ services:
     build:
       context: .
       target: builder
-    container_name: fastapi-application
+    container_name: fastapi-application-csv
     environment:
       PORT: 8000
     ports:
