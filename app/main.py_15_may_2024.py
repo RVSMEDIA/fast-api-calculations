@@ -10,33 +10,6 @@ from datetime import datetime
 
 app = FastAPI()
 
-def convert_xls_to_csv(file):
-    # Read the Excel file into a pandas DataFrame
-    df = pd.read_excel(BytesIO(file), engine='xlrd')
-
-    # Convert the DataFrame to CSV format
-    csv_data = df.to_csv(index=False, encoding='utf-8')
-
-    return csv_data
-
-@app.post("/convert_xls_to_csv/")
-async def convert_xls_to_csv_endpoint(file: UploadFile = File(...)):
-    # Check if the uploaded file is an Excel file
-    if not file.filename.endswith((".xls", ".xlsx")):
-        raise HTTPException(status_code=400, detail="Only Excel files are allowed")
-
-    # Convert the Excel file to CSV format
-    csv_content = convert_xls_to_csv(await file.read())
-
-    # Set response headers for downloading the CSV file
-    headers = {
-        "Content-Disposition": f"attachment; filename={file.filename.split('.')[0]}.csv",
-        "Content-Type": "text/csv",
-    }
-
-    # Return the CSV file as a StreamingResponse
-    return StreamingResponse(iter([csv_content]), headers=headers)
-
 def process_csv(file):
     # Load CSV into DataFrame
     df = pd.read_csv(file.file, skip_blank_lines=True, skiprows=lambda x: x < 9, usecols=lambda x: x.strip() in ['SNo', 'E. Code', 'Name', 'Shift', 'S. InTime', 'S. OutTime', 'A. InTime', 'A. OutTime', 'Work Dur.', 'OT', 'Tot. Dur.', 'LateBy', 'EarlyGoingBy', 'Status', 'Punch Records'])
