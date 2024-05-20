@@ -43,7 +43,7 @@ def generate_pdfs_from_csv(file_path: str, template_path: str, output_dir: str):
         # Generate PDF
         pdf_file_path = os.path.join(today_folder, f"{row['Name']}-{row['Pay Slip for the month of']}.pdf")
         # pdfkit.from_string(str(soup), pdf_file_path)
-        pdfkit.from_string(str(soup), pdf_file_path, configuration=pdfkit.configuration(wkhtmltopdf='/usr/local/bin/wkhtmltopdf/wkhtmltopdf.exe'))
+        pdfkit.from_string(str(soup), pdf_file_path, configuration=pdfkit.configuration(wkhtmltopdf='/usr/bin/wkhtmltopdf'))
 
 
     
