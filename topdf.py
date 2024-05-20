@@ -1,12 +1,12 @@
 import pandas as pd
-from bs4 import BeautifulSoup
+from bs4 import beautifulsoup
 import pdfkit
 import os
 from datetime import date
 
-
 # Read CSV file
 data = pd.read_csv('salarysheet.csv')
+data.columns = [col.strip() for col in data.columns]
 print(data)
 
 # Read HTML template
@@ -86,8 +86,8 @@ for index, row in data.iterrows():
     performance_allowance_element.string = str(row['Performance Allowance'])
     conveince_allowance_element.string = str(row['Conveince Allowance'])
     other_allowance_element.string = str(row['Other Allowance (Bonus/Extra days)'])
-    net_pay_for_the_month_element.string = str(row['Net Pay for the month: '])
-    earning_in_words_element.string = str(row['Earning in words'])
+    net_pay_for_the_month_element.string = str(row['Net Pay for the month:'])
+    earning_in_words_element.string = row['Earning in words']
     cl_used_element.string = str(row['CL used (Leaves Taken)'])
     cl_opening_balance_element.string = str(row['CL opening Balance (Leave Balance For This Month)'])
     cl_balance_element.string = str(row['CL Balance (Paid Leave Balance Remaining)'])
@@ -102,5 +102,5 @@ for index, row in data.iterrows():
     # Continue filling other elements
     
     # Generate PDF
-    pdf_file_path = os.path.join(today_folder, f'report_{index}.pdf')
+    pdf_file_path = os.path.join(today_folder, f"{row['Name']}-{row['Pay Slip for the month of']}.pdf")
     pdfkit.from_string(str(soup), pdf_file_path)

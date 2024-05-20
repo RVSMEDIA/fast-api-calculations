@@ -2,6 +2,13 @@
 
 FROM tiangolo/uvicorn-gunicorn-fastapi:python3.9-slim AS builder
 
+# Install wkhtmltopdf
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        wkhtmltopdf \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 
 COPY requirements.txt ./

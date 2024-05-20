@@ -6,9 +6,12 @@ from io import BytesIO
 from fastapi import FastAPI, File, UploadFile, HTTPException
 from fastapi.responses import StreamingResponse
 from datetime import datetime
-
+from app.controllers import pdf_controller
 
 app = FastAPI()
+
+# Include the PDF router
+app.include_router(pdf_controller.router)
 
 def convert_xls_to_csv(file):
     # Read the Excel file into a pandas DataFrame

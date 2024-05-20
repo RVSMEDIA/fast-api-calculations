@@ -2,3 +2,6 @@ fastapi
 uvicorn
 pandas
 xlrd>=2.0.1
+pdfkit
+beautifulsoup4
+wkhtmltopdf
